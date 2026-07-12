@@ -88,3 +88,11 @@ The exact scope of cross-validation and the random seed are not fully specified.
 All decisions introduced because of missing methodological details will be documented here before implementation.
 
 No methodological ambiguity should be silently resolved in the source code.
+
+### Duplicate Removal Investigation
+
+Dataset profiling demonstrated that duplicate removal is highly sensitive to both feature configuration and scope.
+
+For example, LOC-based deduplication leaves between 3,382 observations globally and 85,982 observations when performed within releases. CK+OTHER-based deduplication leaves between 194,010 and 475,893 observations under the same respective scopes.
+
+Therefore, the reproduction does not assume a duplicate-removal procedure without further methodological investigation.
