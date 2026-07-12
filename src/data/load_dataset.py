@@ -80,3 +80,46 @@ def load_release(csv_path):
     )
 
     return dataframe
+def load_project(project_name, release_files=None):
+    """Load and combine all releases belonging to one project."""
+
+    if release_files is None:
+        release_files = discover_release_files()
+
+    if project_name not in release_files:
+        raise ValueError(f"Unknown project: {project_name}")
+
+    project_frames = []
+
+    for csv_path in release_files[project_name]:
+        dataframe = load_release(csv_path)
+
+        dataframe["project"] = project_name
+        dataframe["release"] = csv_path.stem
+
+        project_frames.append(dataframe)
+
+    if not project_frames:
+        raise ValueError(f"No release CSV files found for: {project_name}")
+
+    return pd.concat(project_frames, ignore_index=True)
+
+
+def load_full_dataset():
+    """Load and combine all projects and releases."""
+
+    release_files = discover_release_files()
+    dataset_frames = []
+
+    for project_name in release_files:
+        project_dataframe = load_project(
+            project_name,
+            release_files=release_files,
+        )
+
+        dataset_frames.append(project_dataframe)
+
+    if not dataset_frames:
+        raise ValueError("No dataset files were loaded.")
+
+    return pd.concat(dataset_frames, ignore_index=True)
